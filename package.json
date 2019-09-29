@@ -1,0 +1,39 @@
+{
+    "name": "decker.io",
+    "description": "Card games lib at hand",
+    "version": "0.0.1",
+    "dependencies": {},
+    "devDependencies": {
+        "@types/chai": "^4.2.3",
+        "@types/mocha": "^5.2.7",
+        "@types/node": "^12.7.8",
+        "chai": "^4.2.0",
+        "mocha": "^6.2.0",
+        "nyc": "^14.1.1",
+        "ts-node": "^8.4.1",
+        "typescript": "^3.6.3"
+    },
+    "nyc": {
+        "all": true,
+        "exclude": [
+            ".nyc_output",
+            "app",
+            "coverage",
+            "node_modules"
+        ],
+        "extension": [
+            ".ts"
+        ],
+        "reporter": [
+            "html",
+            "lcov",
+            "text"
+        ],
+        "require": [
+            "ts-node/register"
+        ]
+    },
+    "scripts": {
+        "test": "./node_modules/.bin/nyc ./node_modules/.bin/mocha"
+    }
+}

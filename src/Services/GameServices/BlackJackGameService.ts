@@ -21,7 +21,7 @@ export default class BlackJackGameService implements GameServiceInterface
         play: []
     };
 
-    private constructor(players: Array<GamePlayer>, deck: DeckInterface)
+    public constructor(players: Array<GamePlayer>, deck: DeckInterface)
     {
         this.players = players;
         this.deck = deck;
@@ -34,6 +34,11 @@ export default class BlackJackGameService implements GameServiceInterface
             const cards: Array<Card> = this.deck.draw();
             player.addCards(cards);
         }
+
+        this.history.play.push({
+            play,
+            "player": player.getPlayer()
+        });
     }
 
     public getCurrentPlayer(): [number, GamePlayer]

@@ -34,4 +34,14 @@ export default class GamePlayer
         });
     }
 
+    public getPlayer(): Player
+    {
+        return this.player;
+    }
+
+    public getHand(): Array<Card>
+    {
+        return this.hand;
+    }
+
 }

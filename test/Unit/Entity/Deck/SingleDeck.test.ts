@@ -1,7 +1,7 @@
 import {expect} from "chai";
-import DeckInterface from "../../../../src/Entity/Deck/DeckInterface";
-import SingleDeck from "../../../../src/Entity/Deck/SingleDeck";
-import Card from "../../../../src/Entity/Card";
+import DeckInterface from "../../../../src/Entities/Deck/DeckInterface";
+import SingleDeck from "../../../../src/Entities/Deck/SingleDeck";
+import Card from "../../../../src/Entities/Card";
 
 
 describe("Test/Unit/Deck/SingleDeckTest", (): void => 

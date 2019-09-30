@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import Card from "../../../src/Entity/Card";
+import Card from "../../../src/Entities/Card";
 
 
 describe("Test/Unit/Entity/CardTest", () => 

@@ -1,69 +1,54 @@
 import Card from "../../Entities/Card";
 import DeckInterface from "./../../Entities/Deck/DeckInterface";
 import GamePlayer from "./../../Entities/GamePlayer";
-import GameServiceInterface from "./GameServiceInterface";
+import InvalidPlayError from "./Exceptions/InvalidPlayError";
+import GameServiceAbstract from "./GameServiceAbstract";
 
 
-export default class BlackJackGameService implements GameServiceInterface
+export default class BlackJackGameService extends GameServiceAbstract
 {
     public possiblePlays: Array<string> = [
         "PLAY:DRAW_CARD",
         "PLAY:STOP"
     ];
 
-    private players: Array<GamePlayer>;
-    
-    private deck: DeckInterface;
-
-    private currentPlayer: [number, GamePlayer];
-
-    private history: any = {
-        play: []
-    };
-
-    public constructor(players: Array<GamePlayer>, deck: DeckInterface)
-    {
-        this.players = players;
-        this.deck = deck;
-    }
-
-    public play(player: GamePlayer, play: string): void
+    public doPlay(play: string, player?: GamePlayer)
     {
         if (play === "PLAY:DRAW_CARD")
         {
-            const cards: Array<Card> = this.deck.draw();
+            const cards: Array<Card> = this.getDeck().draw();
             player.addCards(cards);
-        }
 
-        this.history.play.push({
+            if (this.hasPlayer21Points(player))
+                this.play("PLAY:STOP");
+        } else if (play == "PLAY:STOP")
+            this.endGame();
+        else
+            throw new InvalidPlayError(`${play} is an invalid Play`);
+
+        this.addHistory({
             play,
-            "player": player.getPlayer()
+            "player": player ? player.getPlayer() : null,
+            "created_at": new Date().toString()
         });
     }
 
-    public getCurrentPlayer(): [number, GamePlayer]
+    private hasPlayer21Points(player: GamePlayer): boolean
     {
-        if (!this.currentPlayer)
-            this.setCurrentPlayer(0, this.players[0]);
-
-        return this.currentPlayer;
+        return this.getPlayerTotalPoints(player) > 21;
     }
 
-    public setCurrentPlayer(index: number, player: GamePlayer): void
+    private getPlayerTotalPoints(player: GamePlayer): number
     {
-        this.currentPlayer = [index, player];
-    }
+        const cards: Array<Card> = player.getHand();
+        return cards.reduce((prev: number, curr: Card) => 
+        {
+            let currentValue: number = curr.getNumber();
+            if (currentValue > 10)
+                currentValue = 10;
 
-    public callNextPlayer(): GameServiceInterface
-    {
-        const [oldIndex] = this.getCurrentPlayer();
-
-        const newIndex = typeof this.players[oldIndex + 1] !== "undefined" ? oldIndex + 1 : 0;
-        const player = this.players[newIndex]; 
-
-        this.setCurrentPlayer(newIndex, player);
-
-        return this;
+            return prev + currentValue;
+        }, 0);
     }
 
 }
